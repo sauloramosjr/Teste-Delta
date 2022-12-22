@@ -1,0 +1,44 @@
+version: "3.4"
+
+services:
+  ui:
+    image: testedelta/ui
+    container_name: ui-delta
+    build:
+      context: ./delta-ui/
+      dockerfile: ./ui.dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - production-network
+  back:
+    container_name: back-delta
+    image: testedelta/back
+    build:
+      context: ./delta-back/
+      dockerfile: ./Dockerfile
+    environment:
+      DATABASE_URL: "postgres://user:password@dbdelta:5432/db"
+      PORT: "3000"
+      NODE_ENV: "development"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - dbdelta
+    networks:
+      - production-network
+  dbdelta:
+    image: postgres:10.4
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: 'user'
+      POSTGRES_PASSWORD: 'password'
+      POSTGRES_DB: 'db'
+      DB_HOST: 'localhost'
+    networks:
+      - production-network
+
+networks:
+  production-network:
+    driver: bridge
