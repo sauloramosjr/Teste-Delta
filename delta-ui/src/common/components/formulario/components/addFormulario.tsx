@@ -60,12 +60,15 @@ export const AddFormulario = ({ inputs }: TFormAddProps) => {
                 open: true,
               });
             }
-            setTimeout(() => {
-              setSnackBar({ message: "", open: false });
-            }, 2000);
           } catch (err: any) {
-            console.log(err);
+            setSnackBar({
+              message: err.response.data.error,
+              open: true,
+            });
           }
+          setTimeout(() => {
+            setSnackBar({ message: "", open: false });
+          }, 2000);
         })}
       >
         {inputs.map((input, key) =>

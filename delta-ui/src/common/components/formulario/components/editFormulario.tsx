@@ -1,17 +1,17 @@
-import { useContext, useEffect, useState } from "react";
-import { SnackBarContext } from "../../../contexts/snackbar.contexts";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TFormAddProps, TFormEditProps } from "../types";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import { SnackBarContext } from "../../../contexts/snackbar.contexts";
+import { TFormEditProps } from "../types";
 
 import { Button, Tooltip } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { IAluno, IEditAluno } from "../../../interfaces/aluno.interface";
+import { ENV } from "../../../utils/enviroments";
 import { fetchAxios } from "../../../utils/fetch";
 import * as S from "../styles";
-import { ENV } from "../../../utils/enviroments";
-import { IAluno, IEditAluno } from "../../../interfaces/aluno.interface";
-import { useNavigate } from "react-router-dom";
 
 export const EditFormulario = ({
   id,
@@ -32,12 +32,9 @@ export const EditFormulario = ({
     handleSubmit,
     setValue,
     clearErrors,
-    getValues,
-    getFieldState,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema), defaultValues });
   const [file, setFile] = useState<any>();
-  const [formErrors, setFormErrors] = useState(false);
   const [editAluno, setEditAluno] = useState<IEditAluno>({} as IEditAluno);
   const navigation = useNavigate();
 
@@ -59,7 +56,6 @@ export const EditFormulario = ({
   };
 
   const confirmarSeMudou = async (e: any) => {
-    setFormErrors(!!(await schema.validate(getValues())));
     if (e.target) {
       if (
         !!defaultValues &&
@@ -188,7 +184,9 @@ export const EditFormulario = ({
           }
         >
           <S.InputSubmit
-            invalid={formErrors && !Object.keys(editAluno).length}
+            invalid={
+              !!Object.keys(errors).length || !Object.keys(editAluno).length
+            }
             type="submit"
           />
         </Tooltip>
