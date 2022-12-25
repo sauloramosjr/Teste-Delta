@@ -6,7 +6,6 @@ const novoAluno = () => {
     <>
       <h1>Novo Aluno</h1>
       <Formulario
-        defaultValues={undefined}
         inputs={[
           {
             label: "nome",

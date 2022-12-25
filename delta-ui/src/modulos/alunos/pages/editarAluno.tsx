@@ -7,7 +7,7 @@ import { IAluno } from "../../../common/interfaces/aluno.interface";
 
 const editarAluno = () => {
   const params = useParams();
-  const { alunos, setAlunos } = useContext(AlunosContext);
+  const { alunos } = useContext(AlunosContext);
   const [aluno, setAluno] = useState<IAluno>();
   useEffect(() => {
     if (!!alunos.length) {
@@ -22,6 +22,7 @@ const editarAluno = () => {
           <h3>{aluno.nome}</h3>
 
           <Formulario
+            id={aluno.id}
             defaultValues={aluno}
             inputs={[
               {
@@ -54,7 +55,7 @@ const editarAluno = () => {
             ]}
           ></Formulario>
         </>
-      )}{" "}
+      )}
       {!aluno && <></>}
     </>
   );
