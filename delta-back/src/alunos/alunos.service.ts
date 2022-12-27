@@ -1,13 +1,12 @@
-import { Injectable, StreamableFile } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAlunoDto } from './dto/create-aluno.dto';
 import { UpdateAlunoDto } from './dto/update-aluno.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { HttpException, HttpStatus } from '@nestjs/common';
 
+import { unlinkSync, existsSync } from 'fs';
 import { AlunosEntity } from 'src/alunos/entities/aluno.entity';
+import { throwException } from 'src/utils/httpExceptions';
 import { Repository } from 'typeorm';
-import { createReadStream } from 'fs';
-import { join } from 'path';
 
 @Injectable()
 export class AlunosService {
@@ -16,30 +15,19 @@ export class AlunosService {
     private alunosRepository: Repository<AlunosEntity>,
   ) {}
 
-  async create(createAlunoDto: CreateAlunoDto) {
+  async create(createAlunoDto: CreateAlunoDto, file: Express.Multer.File) {
     if (
       await this.alunosRepository.findOne({
         where: { nome: createAlunoDto.nome },
       })
     ) {
-      throw new HttpException(
-        {
-          status: HttpStatus.CONFLICT,
-          error: 'Já existe aluno com este nome!',
-        },
-        HttpStatus.CONFLICT,
-      );
+      throwException('Já existe aluno com este nome!', HttpStatus.CONFLICT);
     }
     try {
-      return await this.alunosRepository.save(createAlunoDto);
+      const aluno = { ...createAlunoDto, foto: file.filename };
+      return await this.alunosRepository.save(aluno);
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.SERVICE_UNAVAILABLE,
-          error,
-        },
-        HttpStatus.SERVICE_UNAVAILABLE,
-      );
+      throwException(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
   }
 
@@ -48,52 +36,42 @@ export class AlunosService {
   }
 
   async findOne(id: number) {
-    return await this.alunosRepository.findOne({ where: { id } });
+    const aluno = await this.alunosRepository.findOne({ where: { id } });
+    if (!aluno) {
+      throwException('Aluno não encontrado!', HttpStatus.NOT_FOUND);
+    }
+    return aluno;
   }
 
-  async update(id: number, updateAlunoDto: UpdateAlunoDto) {
-    if (!(await this.findOne(id))) {
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          error: 'Aluno não encontrado!',
-        },
-        HttpStatus.NOT_FOUND,
-      );
+  async update(
+    id: number,
+    updateAlunoDto: UpdateAlunoDto,
+    file: Express.Multer.File,
+  ) {
+    await this.findOne(id);
+    let aluno = updateAlunoDto;
+    if (!!file) {
+      const foto = existsSync('./uploads/' + updateAlunoDto.oldImage);
+      if (foto) unlinkSync('./uploads/' + updateAlunoDto.oldImage);
+      aluno = { ...updateAlunoDto, foto: file.filename };
+      delete aluno.oldImage;
     }
     try {
-      return await this.alunosRepository.update(id, updateAlunoDto);
+      return await this.alunosRepository.update(id, aluno);
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.SERVICE_UNAVAILABLE,
-          error,
-        },
-        HttpStatus.SERVICE_UNAVAILABLE,
-      );
+      throwException(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
   }
 
   async remove(id: number) {
-    if (!(await this.findOne(id))) {
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          error: 'Aluno não encontrado!',
-        },
-        HttpStatus.NOT_FOUND,
-      );
-    }
+    const aluno = await this.findOne(id);
+    const foto = existsSync('./uploads/' + aluno.foto);
+    if (foto) unlinkSync('./uploads/' + aluno.foto);
     try {
-      return await this.alunosRepository.delete(id);
+      const deletado = await this.alunosRepository.delete(aluno.id);
+      return deletado;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.SERVICE_UNAVAILABLE,
-          error,
-        },
-        HttpStatus.SERVICE_UNAVAILABLE,
-      );
+      throwException(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
   }
 }

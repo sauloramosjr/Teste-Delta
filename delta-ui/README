@@ -1,0 +1,24 @@
+# FRONT - Teste Delta
+
+## Objetivo
+
+Criar uma UI contendo uma tela inicial com menu que leva para um CRUD de Alunos com os seguintes
+campos: nome, endereço, telefone e foto. O CRUD deve permitir o upload da imagem em
+JPG.
+
+## Instalação & Execução
+
+Para facilitar, existe um arquivo Dockerfile na raiz do projeto, com ele é possível levantar um container Docker para utilizar o front-end.
+para isso utilize o comando
+
+```
+docker build ./ -t ui
+```
+
+em seguida levante o container com o comando
+
+```
+docker run  ui
+```
+
+após subir, o front-end estará na porta 8080

@@ -21,7 +21,7 @@ export class CreateAlunoDto {
   })
   telefone: string;
   @ApiProperty({
-    description: 'Foto do Aluno',
+    description: 'Caminho para Foto do Aluno',
   })
-  foto: any;
+  foto: string;
 }

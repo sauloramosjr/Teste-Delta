@@ -11,7 +11,7 @@ import { fetchAxios } from "../../../utils/fetch";
 import * as S from "../styles";
 
 export const AddFormulario = ({ inputs }: TFormAddProps) => {
-  const getShape = () => {
+  const getShape:()=>any = () => {
     const shape = inputs.reduce((final, atual) => {
       final[atual.label] = atual.validations;
       return final;
@@ -26,6 +26,7 @@ export const AddFormulario = ({ inputs }: TFormAddProps) => {
     setValue,
     clearErrors,
     getValues,
+    reset,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
   const [file, setFile] = useState<any>();
@@ -55,15 +56,19 @@ export const AddFormulario = ({ inputs }: TFormAddProps) => {
               foto: file,
             });
             if (!!resposta.data.id) {
+              reset()
+              setFile(undefined)
               setSnackBar({
                 message: `Aluno ${resposta.data.nome} salvo com sucesso!`,
                 open: true,
+                severity:'success'
               });
             }
           } catch (err: any) {
             setSnackBar({
               message: err.response.data.error,
               open: true,
+              severity:'error'
             });
           }
           setTimeout(() => {
@@ -123,13 +128,14 @@ export const AddFormulario = ({ inputs }: TFormAddProps) => {
             </S.FlexColumn>
           ),
         )}
+
         <S.InputSubmit
           invalid={
             Object.entries(getValues()).length != 4 ||
             !!Object.entries(errors).length
           }
           type="submit"
-        />
+          />
       </S.Form>
     </>
   );

@@ -5,6 +5,7 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   margin-top: 30px;
+  align-items: center;
 `;
 
 export const ContentFileInput = styled.div`
@@ -17,6 +18,8 @@ export const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
+  max-width: 380px;
+  width:100%;
 `;
 export const InputImage = styled.input`
   display: none;
@@ -28,6 +31,8 @@ export const InputSubmit = styled.input`
     props.invalid ? "silver" : "green"};
   color: ${(props: { invalid: boolean }) => (props.invalid ? "grey" : "white")};
   cursor: pointer;
+  max-width: 380px;
+  width: 100%;
 `;
 export const Image = styled.img`
   width: 80px;

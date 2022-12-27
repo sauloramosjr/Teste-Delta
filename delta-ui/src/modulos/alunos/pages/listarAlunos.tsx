@@ -35,6 +35,7 @@ const ListarAlunos = () => {
       setSnackBar({
         message: `Aluno ${nome} foi deletado com sucesso!`,
         open: true,
+        severity:'success'
       });
       setAlunos(alunos.filter((aluno) => aluno.id !== id));
     }

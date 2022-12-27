@@ -15,13 +15,14 @@ export const AlunoCard = styled.div`
   display: flex;
   justify-content: center;
   position: relative;
+  margin-top: 20px;
 `;
 
 export const ListaAlunos = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  width: calc(100vw - 100px);
+  margin-top: 20px;
 `;
 export const InformacoesALuno = styled.div`
   display: flex;

@@ -6,7 +6,7 @@ services:
     container_name: ui-delta
     build:
       context: ./delta-ui/
-      dockerfile: ./ui.dockerfile
+      dockerfile: ./Dockerfile
     ports:
       - "8080:8080"
     networks:

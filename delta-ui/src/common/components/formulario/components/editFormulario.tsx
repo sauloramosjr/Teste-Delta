@@ -111,6 +111,7 @@ export const EditFormulario = ({
                 setSnackBar({
                   message: `Aluno ${e.nome} editado com sucesso!`,
                   open: true,
+                  severity:'success'
                 });
               }
             }

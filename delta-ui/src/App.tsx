@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <SnackBarProvider>
-        <main style={{ width: "100%", height: "100%", minHeight: "100vh" }}>
+        <main style={{ minWidth: "100vw", height: "100%", minHeight: "100vh" }}>
           <Outlet></Outlet>
         </main>
         <Footer></Footer>

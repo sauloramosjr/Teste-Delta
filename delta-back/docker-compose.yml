@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      DATABASE_URL: 'postgres://user:password@db:54320/db'
+      DATABASE_URL: 'postgres://user:password@db:5432/db'
       PORT: '3000'
       NODE_ENV: 'development'
     ports:
@@ -19,7 +19,7 @@ services:
   db:
     image: postgres:10.4
     ports:
-      - '54320:54320'
+      - '5432:5432'
     environment:
       POSTGRES_USER: 'user'
       POSTGRES_PASSWORD: 'password'
