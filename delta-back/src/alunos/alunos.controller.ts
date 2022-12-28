@@ -13,7 +13,6 @@ import { UploadedFile } from '@nestjs/common/decorators';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger/dist/decorators';
 import { Response } from 'express';
-import { unlinkSync } from 'fs';
 import { diskStorage } from 'multer';
 import { join } from 'path';
 import { AlunosService } from './alunos.service';

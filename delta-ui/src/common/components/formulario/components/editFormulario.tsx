@@ -107,11 +107,11 @@ export const EditFormulario = ({
                 delete dataToSend.foto;
               }
               resposta = await fetchAxios.patch("alunos", dataToSend as any);
-              if (!!resposta.data.affected) {
+              if (resposta.status === 200) {
                 setSnackBar({
                   message: `Aluno ${e.nome} editado com sucesso!`,
                   open: true,
-                  severity:'success'
+                  severity: "success",
                 });
               }
             }

@@ -49,7 +49,7 @@ export const AddFormulario = ({ inputs }: TFormAddProps) => {
         onSubmit={handleSubmit(async (e: any) => {
           try {
             const valid = await schema.validate(e);
-            if (!valid) return;
+            if (!valid || !file) return;
             let resposta = null;
             resposta = await fetchAxios.post("alunos", {
               ...e,
@@ -132,7 +132,7 @@ export const AddFormulario = ({ inputs }: TFormAddProps) => {
         <S.InputSubmit
           invalid={
             Object.entries(getValues()).length != 4 ||
-            !!Object.entries(errors).length
+            !!Object.entries(errors).length || !file
           }
           type="submit"
           />
