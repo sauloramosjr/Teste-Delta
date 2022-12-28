@@ -1,10 +1,10 @@
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject } from '@nestjs/common';
 import { CreateAlunoDto } from 'src/alunos/dto/create-aluno.dto';
 import { UpdateAlunoDto } from 'src/alunos/dto/update-aluno.dto';
 import { IAluno } from 'src/alunos/interfaces/aluno.interface';
 import { IAlunoRepository } from 'src/alunos/repository/alunoRepository.interface';
 import { throwException } from 'src/utils/httpExceptions';
-import { DataSource, DeleteResult, Repository } from 'typeorm';
+import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { AlunosEntity } from '../entities/aluno.entity';
 
 export class AlunoRepository
@@ -52,21 +52,21 @@ export class AlunoRepository
     return await this.createQueryBuilder('alunos').getMany();
   }
 
-  async deleteAlunoById(idAluno: number): Promise<DeleteResult> {
+  async updateAlunoById(
+    id: number,
+    aluno: UpdateAlunoDto,
+  ): Promise<UpdateResult> {
     try {
-      const deletado = await this.delete(idAluno);
-      return deletado;
+      return await this.update(id, aluno);
     } catch (error) {
       throwException(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
   }
 
-  async updateAlunoById(
-    id: number,
-    aluno: UpdateAlunoDto,
-  ): Promise<DeleteResult> {
+  async deleteAlunoById(idAluno: number): Promise<DeleteResult> {
     try {
-      return await this.update(id, aluno);
+      const deletado = await this.delete(idAluno);
+      return deletado;
     } catch (error) {
       throwException(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
